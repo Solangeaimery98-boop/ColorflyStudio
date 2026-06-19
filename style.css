@@ -1,0 +1,61 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  background-color: grey;
+  padding: 30px;
+}
+/* El contenedor de la paleta ocupa toda la pantalla */
+
+#palletteContainer {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+#interactionContainer {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.paletteInputs {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+footer {
+  display: flex;
+  justify-content: space-around;
+  background-color: grey;
+  padding: 30px;
+}
