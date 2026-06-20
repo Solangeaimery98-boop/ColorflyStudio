@@ -32,7 +32,7 @@ nav {
   justify-content: space-between;
   background-color: grey;
 }
-/* El contenedor de la paleta ocupa toda la pantalla */
+
 .logoImg {
   width: 150px;
 }
@@ -43,17 +43,15 @@ nav {
 }
 
 .color-box {
-  flex: 1; /* cada caja ocupa el mismo espacio disponible */
-  transition: flex 0.3s ease; /* animación suave si cambia el tamaño */
+  flex: 1;
+  transition: flex 0.3s ease;
   cursor: pointer;
-  background-color: aqua;
   border: 3px;
   border-color: black;
 }
 
-/* Efecto hover: la caja que tocás se agranda un poco */
 .color-box:hover {
-  flex: 1.5;
+  flex: 1.2;
 }
 
 select {
