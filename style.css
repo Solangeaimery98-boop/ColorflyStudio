@@ -50,10 +50,23 @@ nav {
   cursor: pointer;
   border: 3px;
   border-color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.hidden {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
 }
 
 .color-box:hover {
   flex: 1.2;
+}
+
+.color-box:hover .hidden {
+  opacity: 1;
 }
 
 select {
@@ -86,7 +99,7 @@ select {
     0 0 15px #ff4fd8,
     0 0 25px #4fffe0;
 
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .generate-btn:hover {

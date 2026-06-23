@@ -43,7 +43,11 @@ const generateColorBoxes = () => {
   if (selectedFormat.value === "hex") {
     for (let i = 0; i < selectedSize; i++) {
       const colorDiv = document.createElement("div");
+      const colorSpan = document.createElement("span");
       const color = generateRandomColorHex();
+      colorSpan.textContent = color;
+      colorSpan.classList.add("hidden");
+      colorDiv.appendChild(colorSpan);
       colorDiv.classList.add("color-box");
       colorDiv.style.backgroundColor = color;
       container.appendChild(colorDiv);
@@ -53,7 +57,11 @@ const generateColorBoxes = () => {
     console.log("entre al if de hsl");
     for (let i = 0; i < selectedSize; i++) {
       const colorDiv = document.createElement("div");
+      const colorSpan = document.createElement("span");
       const color = generateRandomColorHSL();
+      colorSpan.textContent = color;
+      colorSpan.classList.add("hidden");
+      colorDiv.appendChild(colorSpan);
       colorDiv.classList.add("color-box");
       colorDiv.style.backgroundColor = color;
       container.appendChild(colorDiv);
