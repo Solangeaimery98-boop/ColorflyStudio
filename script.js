@@ -12,15 +12,26 @@ radioButtons.forEach((radiobutton) => {
   });
 });
 
-const generateRandomColor = () => {
+const generateRandomColorHex = () => {
   let color = "#";
   for (let i = 0; i < 6; i++) {
     const randomCharacter = Math.floor(Math.random() * 16);
     color = color + hexCharacters[randomCharacter];
   }
-  console.log(color); //me da bien el color siii
+  console.log(color); //me da bien el color sii
   return color;
 };
+
+const generateRandomColorHSL = () => {
+  const H = Math.floor(Math.random() * 360);
+  const S = Math.floor(Math.random() * (100 - 60 + 1)) + 60; //Le doy este rango para que salgan colores lindos
+  const L = Math.floor(Math.random() * (70 - 35 + 1)) + 35; // sino salen colores o muy claros o muy obscuros
+  const color = `hsl(${H}, ${S}%, ${L}%)`;
+  console.log(color); //funciona
+  return color;
+};
+
+generateRandomColorHSL();
 
 const generateColorBoxes = () => {
   const selectedRadioButton = document.querySelector(
@@ -30,7 +41,7 @@ const generateColorBoxes = () => {
   const selectedSize = selectedRadioButton.value;
   for (let i = 0; i < selectedSize; i++) {
     const colorDiv = document.createElement("div");
-    const color = generateRandomColor();
+    const color = generateRandomColorHex();
     colorDiv.classList.add("color-box");
     colorDiv.style.backgroundColor = color;
     container.appendChild(colorDiv);
