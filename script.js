@@ -13,7 +13,6 @@ const generateRandomColorHex = () => {
     const randomCharacter = Math.floor(Math.random() * 16);
     color = color + hexCharacters[randomCharacter];
   }
-  console.log(color); //me da bien el color sii
   return color;
 };
 
@@ -22,7 +21,6 @@ const generateRandomColorHSL = () => {
   const S = Math.floor(Math.random() * (100 - 60 + 1)) + 60; //Le doy este rango para que salgan colores lindos
   const L = Math.floor(Math.random() * (70 - 35 + 1)) + 35; // sino salen colores o muy claros o muy obscuros
   const color = `hsl(${H}, ${S}%, ${L}%)`;
-  console.log(color); //funciona
   return color;
 };
 
@@ -30,38 +28,94 @@ const generateColorBoxes = () => {
   const selectedRadioButton = document.querySelector(
     'input[name="size"]:checked',
   );
+
   container.innerHTML = "";
   const selectedSize = selectedRadioButton.value;
   currentColors = [];
+
   if (selectedFormat.value === "hex") {
     for (let i = 0; i < selectedSize; i++) {
       const colorDiv = document.createElement("div");
       const colorSpan = document.createElement("span");
+      const buttonsContainer = document.createElement("div");
+
       const color = generateRandomColorHex();
+
       colorSpan.id = `color-${i}`;
       colorSpan.textContent = color;
-      colorSpan.classList.add("hidden");
-      colorDiv.appendChild(colorSpan);
+      colorSpan.classList.add("colorSpan");
+
+      buttonsContainer.classList.add("buttons-container");
+
+      buttonsContainer.innerHTML = `
+        <button class="save-btn" id="save-btn-${i}">
+          <p> ♡ </p>
+        </button>
+
+        <button class="copy-btn" id="copy-btn-${i}">
+          <p> ⧉ </p>
+        </button>
+      `;
       colorDiv.classList.add("color-box");
       colorDiv.style.backgroundColor = color;
+
+      colorDiv.appendChild(buttonsContainer);
+      colorDiv.appendChild(colorSpan);
+
       container.appendChild(colorDiv);
+
       currentColors.push(color);
+      const colorButtonSave = document.getElementById(`save-btn-${i}`);
+      const colorButtonCopy = document.getElementById(`copy-btn-${i}`);
+      colorButtonCopy.addEventListener("click", function () {
+        navigator.clipboard.writeText(color);
+        showTooltip(event);
+      });
+      colorButtonSave.addEventListener("click", function () {
+        colorButtonSave.textContent = "♥︎";
+      });
     }
   }
+
   if (selectedFormat.value === "hsl") {
-    console.log("entre al if de hsl");
     for (let i = 0; i < selectedSize; i++) {
       const colorDiv = document.createElement("div");
       const colorSpan = document.createElement("span");
-      colorDiv.appendChild(colorSpan);
-      colorSpan.id = `color-${i}`;
+      const buttonsContainer = document.createElement("div");
+
       const color = generateRandomColorHSL();
+
+      colorSpan.id = `color-${i}`;
       colorSpan.textContent = color;
-      colorSpan.classList.add("hidden");
+      colorSpan.classList.add("colorSpan");
+      buttonsContainer.classList.add("buttons-container");
+      buttonsContainer.innerHTML = `
+        <button class="save-btn" id="save-btn-${i}">
+          <p> ♡ </p>
+        </button>
+
+        <button class="copy-btn" id="copy-btn-${i}">
+          <p> ⧉ </p>
+        </button>
+      `;
       colorDiv.classList.add("color-box");
       colorDiv.style.backgroundColor = color;
+
+      colorDiv.appendChild(buttonsContainer);
+      colorDiv.appendChild(colorSpan);
+
       container.appendChild(colorDiv);
+
       currentColors.push(color);
+      const colorButtonSave = document.getElementById(`save-btn-${i}`);
+      const colorButtonCopy = document.getElementById(`copy-btn-${i}`);
+      colorButtonSave.addEventListener("click", function () {
+        colorButtonSave.textContent = "♥︎";
+      });
+      colorButtonCopy.addEventListener("click", function () {
+        navigator.clipboard.writeText(color);
+        showTooltip(event);
+      });
     }
   }
 };
@@ -161,7 +215,7 @@ const getLightness = (color) => {
     return separateLight;
   } else {
     let separateLight = color.split(",");
-    separateLight = separateLight[3].replace("%)", "");
+    separateLight = separateLight[2].replace("%)", "");
     separateLight = Number(separateLight);
     return separateLight;
   }
@@ -170,12 +224,18 @@ const getLightness = (color) => {
 const calculateSaturation = (array) => {
   for (let i = 0; i < array.length; i++) {
     const colorSpan = document.getElementById(`color-${i}`);
+    const colorButtonSave = document.getElementById(`save-btn-${i}`);
+    const colorButtonCopy = document.getElementById(`copy-btn-${i}`);
     const lightness = getLightness(array[i]);
-    if (lightness <= 60) {
+    if (lightness <= 55) {
       colorSpan.style.color = "white";
+      colorButtonCopy.style.color = "white";
+      colorButtonSave.style.color = "white";
     }
-    if (lightness >= 60) {
+    if (lightness >= 55) {
       colorSpan.style.color = "black";
+      colorButtonSave.style.color = "black";
+      colorButtonCopy.style.color = "black";
     }
   }
 };
@@ -184,11 +244,13 @@ const radioButtons = document.querySelectorAll('input[name="size"]');
 radioButtons.forEach((radiobutton) => {
   radiobutton.addEventListener("click", function () {
     generateColorBoxes();
+    calculateSaturation(currentColors);
   });
 });
 
 generateButton.addEventListener("click", function () {
   generateColorBoxes();
+  calculateSaturation(currentColors);
 });
 
 selectedFormat.addEventListener("change", function () {
@@ -210,6 +272,22 @@ miSelect.addEventListener("change", function () {
     interactionContainer.style.backgroundColor = "black";
   }
 }); // aun tenemos que ajustar estilos para letras etc. pero al menos tenemos la funcionalidad basica.
+
+//funcion para evento click de tipo tooltip para boton copiar, uso la misma logica para mi boton guardar
+const showTooltip = (event) => {
+  console.log("entré al tooltip");
+  const tooltip = document.createElement("div");
+  tooltip.textContent = "✓ Copiado";
+  tooltip.classList.add("tooltip");
+  tooltip.style.left = `${event.clientX}px`;
+  tooltip.style.top = `${event.clientY - 40}px`;
+  document.body.appendChild(tooltip);
+  console.log(tooltip);
+
+  setTimeout(() => {
+    tooltip.remove();
+  }, 1000);
+};
 
 generateColorBoxes();
 calculateSaturation(currentColors);
