@@ -69,10 +69,11 @@ const generateColorBoxes = () => {
       const colorButtonCopy = document.getElementById(`copy-btn-${i}`);
       colorButtonCopy.addEventListener("click", function () {
         navigator.clipboard.writeText(color);
-        showTooltip(event);
+        showTooltipCopy(event);
       });
-      colorButtonSave.addEventListener("click", function () {
+      colorButtonSave.addEventListener("click", function (event) {
         colorButtonSave.textContent = "♥︎";
+        showTooltipSave(event);
       });
     }
   }
@@ -103,18 +104,18 @@ const generateColorBoxes = () => {
 
       colorDiv.appendChild(buttonsContainer);
       colorDiv.appendChild(colorSpan);
-
       container.appendChild(colorDiv);
 
       currentColors.push(color);
       const colorButtonSave = document.getElementById(`save-btn-${i}`);
       const colorButtonCopy = document.getElementById(`copy-btn-${i}`);
-      colorButtonSave.addEventListener("click", function () {
+      colorButtonSave.addEventListener("click", function (event) {
         colorButtonSave.textContent = "♥︎";
+        showTooltipSave(event);
       });
-      colorButtonCopy.addEventListener("click", function () {
+      colorButtonCopy.addEventListener("click", function (event) {
         navigator.clipboard.writeText(color);
-        showTooltip(event);
+        showTooltipCopy(event);
       });
     }
   }
@@ -274,7 +275,7 @@ miSelect.addEventListener("change", function () {
 }); // aun tenemos que ajustar estilos para letras etc. pero al menos tenemos la funcionalidad basica.
 
 //funcion para evento click de tipo tooltip para boton copiar, uso la misma logica para mi boton guardar
-const showTooltip = (event) => {
+const showTooltipCopy = (event) => {
   console.log("entré al tooltip");
   const tooltip = document.createElement("div");
   tooltip.textContent = "✓ Copiado";
@@ -283,6 +284,20 @@ const showTooltip = (event) => {
   tooltip.style.top = `${event.clientY - 40}px`;
   document.body.appendChild(tooltip);
   console.log(tooltip);
+
+  setTimeout(() => {
+    tooltip.remove();
+  }, 1000);
+};
+
+const showTooltipSave = (event) => {
+  console.log("entré al tooltip save");
+  const tooltip = document.createElement("div");
+  tooltip.textContent = "color saved";
+  tooltip.classList.add("tooltip");
+  tooltip.style.left = `${event.clientX}px`;
+  tooltip.style.top = `${event.clientY - 40}px`;
+  document.body.appendChild(tooltip);
 
   setTimeout(() => {
     tooltip.remove();
