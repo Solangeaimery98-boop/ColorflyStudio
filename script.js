@@ -40,6 +40,7 @@ const generateColorBoxes = () => {
       const buttonsContainer = document.createElement("div");
       const color = generateRandomColorHex();
       colorSpan.id = `color-${i}`;
+      colorDiv.id = `box-${i}`;
       colorSpan.textContent = color;
       colorSpan.classList.add("colorSpan");
       buttonsContainer.classList.add("buttons-container");
@@ -59,7 +60,7 @@ const generateColorBoxes = () => {
       container.appendChild(colorDiv);
       currentColors.push({
         color: color,
-        id: colorSpan.id,
+        id: colorDiv.id,
         isSaved: false,
       });
       const colorButtonSave = document.getElementById(`save-btn-${i}`);
@@ -69,8 +70,13 @@ const generateColorBoxes = () => {
         showTooltipCopy(event);
       });
       colorButtonSave.addEventListener("click", function (event) {
-        colorButtonSave.textContent = "♥︎";
-        showTooltipSave(event);
+        currentColors[i].isSaved = !currentColors[i].isSaved;
+        if (currentColors[i].isSaved) {
+          colorButtonSave.textContent = "♥︎";
+        } else {
+          colorButtonSave.textContent = "♡";
+        }
+        showTooltipSave(event, currentColors[i].isSaved);
       });
     }
   }
@@ -81,6 +87,7 @@ const generateColorBoxes = () => {
       const colorSpan = document.createElement("span");
       const buttonsContainer = document.createElement("div");
       const color = generateRandomColorHSL();
+      colorDiv.id = `box-${i}`;
       colorSpan.id = `color-${i}`;
       colorSpan.textContent = color;
       colorSpan.classList.add("colorSpan");
@@ -101,14 +108,19 @@ const generateColorBoxes = () => {
       container.appendChild(colorDiv);
       currentColors.push({
         color: color,
-        id: colorSpan.id,
+        id: colorDiv.id,
         isSaved: false,
       });
       const colorButtonSave = document.getElementById(`save-btn-${i}`);
       const colorButtonCopy = document.getElementById(`copy-btn-${i}`);
       colorButtonSave.addEventListener("click", function (event) {
-        colorButtonSave.textContent = "♥︎";
-        showTooltipSave(event);
+        currentColors[i].isSaved = !currentColors[i].isSaved;
+        if (currentColors[i].isSaved) {
+          colorButtonSave.textContent = "♥︎";
+        } else {
+          colorButtonSave.textContent = "♡";
+        }
+        showTooltipSave(event, currentColors[i].isSaved);
       });
       colorButtonCopy.addEventListener("click", function (event) {
         navigator.clipboard.writeText(color);
@@ -199,8 +211,22 @@ function convertColor(color) {
 
 //aca empiezo con mi funcion de refreshPalette para volver a generar colores si algunos estan bloqueados o no
 
-const refreshPalette = () => {
-  //aca iria mi codigo SI TUVIERA UNO :c
+const refreshPalette = (array) => {
+  for (let i = 0; i < array.length; i++) {
+    colorBox = document.getElementById(array[i].id);
+    if (!array[i].isSaved) {
+      if (currentColors[i].color.startsWith("#")) {
+        const newColor = generateRandomColorHex();
+        colorBox.style.backgroundColor = newColor;
+        currentColors[i].color = newColor;
+      }
+      if (currentColors[i].color.startsWith("hsl")) {
+        const newColor = generateRandomColorHSL();
+        colorBox.style.backgroundColor = newColor;
+        currentColors[i].color = newColor;
+      }
+    }
+  }
 };
 
 //Funciones que calculan la luz de mi color para mostrar el span blanco o negro segun sea necesario para mejo9r contraste
@@ -241,13 +267,14 @@ const calculateSaturation = (array) => {
 const radioButtons = document.querySelectorAll('input[name="size"]');
 radioButtons.forEach((radiobutton) => {
   radiobutton.addEventListener("click", function () {
+    // refreshPalette(currentColors);// aca todavia no se como guardar los colores y que se puedan agregar mas :c
     generateColorBoxes();
     calculateSaturation(currentColors);
   });
 });
 
 generateButton.addEventListener("click", function () {
-  generateColorBoxes();
+  refreshPalette(currentColors);
   calculateSaturation(currentColors);
 });
 
@@ -269,7 +296,7 @@ miSelect.addEventListener("change", function () {
     navbar.style.borderBottom = "15px solid black";
     interactionContainer.style.borderTop = "15px solid black";
   }
-}); // aun tenemos que ajustar estilos para letras etc. pero al menos tenemos la funcionalidad basica.
+});
 
 //funcion para evento click de tipo tooltip para boton copiar, uso la misma logica para mi boton guardar
 //  , ver como hacerla dinamica para acortar codigo despues.
@@ -288,10 +315,20 @@ const showTooltipCopy = (event) => {
   }, 1000);
 };
 
-const showTooltipSave = (event) => {
-  console.log("entré al tooltip save");
+const showTooltipSave = (event, isSaved) => {
   const tooltip = document.createElement("div");
-  tooltip.textContent = "Color saved";
+  if (isSaved) {
+    console.log("entre al if unsaved");
+    tooltip.textContent = "Color saved";
+    tooltip.classList.add("tooltip");
+    tooltip.style.left = `${event.clientX}px`;
+    tooltip.style.top = `${event.clientY - 40}px`;
+    document.body.appendChild(tooltip);
+
+    setTimeout(() => {
+      tooltip.remove();
+    }, 1000);
+  } else tooltip.textContent = "Color unsaved";
   tooltip.classList.add("tooltip");
   tooltip.style.left = `${event.clientX}px`;
   tooltip.style.top = `${event.clientY - 40}px`;
