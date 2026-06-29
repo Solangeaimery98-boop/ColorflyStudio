@@ -40,7 +40,7 @@ const createColorBox = (color, index) => {
         </button>
 
         <button class="copy-btn" id="copy-btn-${index}">
-          <p> ⧉ </p>
+          <i class="fa-regular fa-copy"></i>
         </button>
       `;
   //<i class="fa-solid fa-heart"></i> // este voy a neceitar cuando lo neceste lleno, todavia me falta la logik
