@@ -127,7 +127,7 @@ Its purpose was to help me better understand JavaScript concepts, explore differ
 
 📄 **Read the complete AI documentation here:**
 
-➡️ **[AI Development Log](./assets/Ai/README-AI.md)**
+➡️ **[AI Development Log](/assets/Ai)**
 
 Inside that document you'll find:
 
